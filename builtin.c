@@ -10,8 +10,8 @@
 /**
  * wrappers for the exit and chdir function
  */
-int call_exit(int status){
-	exit(status);
+int call_exit(char * status){
+	exit(atoi(status));
 	return 0;
 }//end of call_exit
 
@@ -50,7 +50,7 @@ int is_builtin(cmdList *c){
  * executes the built in function that c corresponds to
  */
 void builtin(cmdList *c){
-	int (*exit_ptr)(int status) = &call_exit;
+	int (*exit_ptr)(char * status) = &call_exit;
 	int (*cd_ptr)(char * path) = &call_cd;
 
 	int i = 0, fx_length = 2;
