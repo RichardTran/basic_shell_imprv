@@ -106,7 +106,6 @@ void piping(cmdList *head){
 	int child_status;
 	int exe_id;
 	int cmdCount = numOfCmds(head);
-	printf("cmdCount: %d\n", cmdCount);
 	int fd[2];
 	int fd2[2];
 //	int fd3[2];
@@ -120,12 +119,13 @@ void piping(cmdList *head){
 		switch(pid = fork()){
 		case 0:
 			execvp(cmd1->argv[0],cmd1->argv);
-			return;
+			exit(0);
 		default:
-			while((pid = wait(&status)) != -1){
-				fprintf(stderr,"process %d exits with %d\n", pid, WEXITSTATUS(status));
-			}
-				return;
+	//		while((pid = wait(&status)) != -1){
+	//		}
+			pid = wait(&status);
+			fprintf(stderr,"process %d exits with %d\n", pid, WEXITSTATUS(status));
+			return;
 		}
 	}
 	// two commands	
@@ -142,7 +142,6 @@ void piping(cmdList *head){
 	// three commands
 	else if(cmdCount == 3){
 		runsrc2(fd,fd2,cmd1->argv);
-//		wait();
 		transfer(fd, fd2, cmd1->next->argv);
 		rundest2(fd,fd2,cmd1->next->next->argv);
 		close(fd[0]);// close(fd2[1]); close(fd[1]); close(fd2[1]);
@@ -157,10 +156,6 @@ void piping(cmdList *head){
 	else{
 		return;
 	}
-//	exit(0);
-/*	while(curr!=NULL){
-		
-	}*/
 }
 
 cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
@@ -176,11 +171,8 @@ cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
 		ptr = malloc(sizeof(struct cmdListStruct));
 	}
 	ptr->argc = count;
-	printf("ptr->argc: %d\n",count);
 	for(i = 0; i<count; i++){
-		printf("Entry[%i] : %s\n",i,arguments[i]);
 		ptr->argv[i] = (arguments[i]);
-		printf("Ptr->argv[%d] = %s\n",i, ptr->argv[i]);
 	}
 	ptr->argv[count] = NULL;
 	return ptr;
@@ -196,7 +188,6 @@ cmdList* parseCmds(char* input){
 	cmdList* cmdListHead = NULL;
 	cmdList* cmdListTail = NULL;
 	while(c!='\0'){
-		printf("Character: %c\n",c);
 		if( (c=='|' || c=='\n' || c=='\0')  && quoteFlag == 0){
 			if(ptrFlag==1){ // Case when no space between string and pipe character
 				*(input+i)='\0';
@@ -216,6 +207,7 @@ cmdList* parseCmds(char* input){
 			ptrFlag=1;
 			if(bufferIndex>50){
 				printf("Too many arguments. Only 50 are allowed\n");
+				return NULL;
 			}
 			if(c=='\''){
 				quoteFlag = 1;
@@ -279,12 +271,14 @@ int main(int argc, char** argv){
 	int showprompt = isatty(0);
 	cmdList* list;
 	cmdList* DEBUG_PTR;
+	int exitStatus;
 	while(1==1){
 		if(showprompt){
 			printf("$ ");
-			fgets(cmdLineInput,MAX,stdin);
+			if(exitStatus=fgets(cmdLineInput,MAX,stdin)==0){
+				exit(0);
+			}
 		}
-		printf("String: %s\n",cmdLineInput);
 		list = parseCmds(cmdLineInput);
 		if(list!=NULL&&is_builtin(list) == 0){
 			builtin(list);
@@ -292,16 +286,5 @@ int main(int argc, char** argv){
 		else if(list!=NULL){
 			piping(list);
 		}
-//DEBUG
-			DEBUG_PTR = list;
-			int i;
-			while(DEBUG_PTR!=NULL){
-				printf("Cmd:\n");
-				for(i = 0;i < DEBUG_PTR->argc;i++){
-					printf("Argv[%d]: %s\n",i, DEBUG_PTR->argv[i]);
-				}
-				DEBUG_PTR = DEBUG_PTR->next;
-			}
-//DEBUG_END CODE
 	}
 }
