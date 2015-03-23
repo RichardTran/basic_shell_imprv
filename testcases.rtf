@@ -1,0 +1,223 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww16600\viewh9280\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 1\
+===\
+$\
+$\
+\
+2\
+===\
+$\
+$\
+\
+3\
+===\
+$^D\
+\
+4\
+===\
+$ typing here\
+\
+5\
+===\
+$ (echo echo abc;echo echo def;echo echo ghi)|./shell\
+abc\
+process 46480 exits with 0\
+\
+6\
+===\
+$ echo hello, world\
+hello, world\
+process 46505 exits with 0\
+\
+7\
+===\
+$ echo hello, world\
+hello, world\
+process 46508 exits with 0\
+\
+8\
+===\
+$ echo a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z\
+Too many arguments. Only 50 are allowed\
+\
+9\
+===\
+$ echo "abc" "def" 'ghi' 'jkl'\
+abc def ghi jkl\
+process 46519 exits with 0\
+\
+10\
+===\
+$ ./echoargs 'abc def ghi' "j     k   l"\
+argc = 3\
+arg[0] = "./echo"\
+arg[1] = "abc def ghi"\
+arg[2] = "j     k   l"\
+process 46568 exits with 0\
+\
+11\
+===\
+$ echo 'abc\
+Error: Mismatched quotes\
+\
+12\
+===\
+$ echo 'abc"\
+Error: Mismatched quotes\
+\
+13\
+===\
+$ ls -laF /|tr a-z A-Z\
+TOTAL 16445\
+DRWXR-XR-X    31 ROOT  WHEEL     1122 MAR 31  2005 ./\
+DRWXR-XR-X    31 ROOT  WHEEL     1122 MAR 31  2005 ../\
+D--X--X--X     8 ROOT  WHEEL      272 SEP  3  2014 .DOCUMENTREVISIONS-V100/\
+DRWXR-XR-X     2 ROOT  WHEEL       68 JUN 28  2014 .PKINSTALLSANDBOXMANAGER/\
+DRWX------     5 ROOT  WHEEL      170 JUN 28  2014 .SPOTLIGHT-V100/\
+D-WX-WX-WT     2 ROOT  WHEEL       68 JUL  5  2014 .TRASHES/\
+----------     1 ROOT  ADMIN        0 AUG 24  2013 .FILE\
+DRWX------  3773 ROOT  WHEEL   128282 MAR 23 16:43 .FSEVENTSD/\
+process 46575 exits with 0\
+DRWXR-XR-X@    2 ROOT  WHEEL       68 AUG 24  2013 .VOL/\
+DRWXRWXR-X+   70 ROOT  ADMIN     2380 FEB 27 14:21 APPLICATIONS/\
+DRWXR-XR-X+   62 ROOT  WHEEL     2108 DEC 11 18:50 LIBRARY/\
+DRWXR-XR-X@    2 ROOT  WHEEL       68 AUG 24  2013 NETWORK/\
+DRWXR-XR-X+    4 ROOT  WHEEL      136 MAR 30  2005 SYSTEM/\
+LRWXR-XR-X     1 ROOT  WHEEL       49 JUL  5  2014 USER INFORMATION@ -> /LIBRARY/DOCUMENTATION/USER INFORMATION.LOCALIZED\
+DRWXR-XR-X     6 ROOT  ADMIN      204 AUG 13  2014 USERS/\
+DRWXRWXRWT@    3 ROOT  ADMIN      102 MAR 23 15:12 VOLUMES/\
+DRWXR-XR-X@   39 ROOT  WHEEL     1326 JUN 28  2014 BIN/\
+DRWXRWXR-T@    2 ROOT  ADMIN       68 AUG 24  2013 CORES/\
+DR-XR-XR-X     3 ROOT  WHEEL     4510 MAR 19 15:55 DEV/\
+LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 ETC@ -> PRIVATE/ETC\
+DR-XR-XR-X     2 ROOT  WHEEL        1 MAR 22 12:07 HOME/\
+-RWXR-XR-X@    1 ROOT  WHEEL  8394000 JUN  4  2014 MACH_KERNEL*\
+DR-XR-XR-X     2 ROOT  WHEEL        1 MAR 22 12:07 NET/\
+DRWXRWXR-X     4 ROOT  WHEEL      136 SEP  3  2014 OPT/\
+DRWXR-XR-X@    6 ROOT  WHEEL      204 JUN 28  2014 PRIVATE/\
+DRWXR-XR-X@   62 ROOT  WHEEL     2108 JUN 28  2014 SBIN/\
+LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 TMP@ -> PRIVATE/TMP\
+DRWXR-XR-X@   12 ROOT  WHEEL      408 SEP  3  2014 USR/\
+LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 VAR@ -> PRIVATE/VAR\
+process 46576 exits with 0\
+\
+14\
+===\
+$ ls -alF  / | grep bin | cat -n\
+process 46581 exits with 0\
+     1	drwxr-xr-x@   39 root  wheel     1326 Jun 28  2014 bin/\
+     2	drwxr-xr-x@   62 root  wheel     2108 Jun 28  2014 sbin/\
+process 46582 exits with 0\
+process 46583 exits with 0\
+\
+15\
+===\
+$ ls -alF  / | grep bin | tr a-z 'A-Z' |rev|cat -n\
+process 46588 exits with 0\
+     1	TOTAL 16445\
+process 46591 exits with 0\
+     2	DRWXR-XR-X    31 ROOT  WHEEL     1122 MAR 31  2005 ./\
+process 46590 exits with 0\
+process 46589 exits with 1\
+     3	DRWXR-XR-X    31 ROOT  WHEEL     1122 MAR 31  2005 ../\
+     4	D--X--X--X     8 ROOT  WHEEL      272 SEP  3  2014 .DOCUMENTREVISIONS-V100/\
+     5	DRWXR-XR-X     2 ROOT  WHEEL       68 JUN 28  2014 .PKINSTALLSANDBOXMANAGER/\
+     6	DRWX------     5 ROOT  WHEEL      170 JUN 28  2014 .SPOTLIGHT-V100/\
+     7	D-WX-WX-WT     2 ROOT  WHEEL       68 JUL  5  2014 .TRASHES/\
+     8	----------     1 ROOT  ADMIN        0 AUG 24  2013 .FILE\
+     9	DRWX------  3773 ROOT  WHEEL   128282 MAR 23 16:43 .FSEVENTSD/\
+    10	DRWXR-XR-X@    2 ROOT  WHEEL       68 AUG 24  2013 .VOL/\
+    11	DRWXRWXR-X+   70 ROOT  ADMIN     2380 FEB 27 14:21 APPLICATIONS/\
+    12	DRWXR-XR-X+   62 ROOT  WHEEL     2108 DEC 11 18:50 LIBRARY/\
+    13	DRWXR-XR-X@    2 ROOT  WHEEL       68 AUG 24  2013 NETWORK/\
+    14	DRWXR-XR-X+    4 ROOT  WHEEL      136 MAR 30  2005 SYSTEM/\
+    15	LRWXR-XR-X     1 ROOT  WHEEL       49 JUL  5  2014 USER INFORMATION@ -> /LIBRARY/DOCUMENTATION/USER INFORMATION.LOCALIZED\
+    16	DRWXR-XR-X     6 ROOT  ADMIN      204 AUG 13  2014 USERS/\
+    17	DRWXRWXRWT@    3 ROOT  ADMIN      102 MAR 23 15:12 VOLUMES/\
+    18	DRWXR-XR-X@   39 ROOT  WHEEL     1326 JUN 28  2014 BIN/\
+    19	DRWXRWXR-T@    2 ROOT  ADMIN       68 AUG 24  2013 CORES/\
+    20	DR-XR-XR-X     3 ROOT  WHEEL     4510 MAR 19 15:55 DEV/\
+    21	LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 ETC@ -> PRIVATE/ETC\
+    22	DR-XR-XR-X     2 ROOT  WHEEL        1 MAR 22 12:07 HOME/\
+    23	-RWXR-XR-X@    1 ROOT  WHEEL  8394000 JUN  4  2014 MACH_KERNEL*\
+    24	DR-XR-XR-X     2 ROOT  WHEEL        1 MAR 22 12:07 NET/\
+    25	DRWXRWXR-X     4 ROOT  WHEEL      136 SEP  3  2014 OPT/\
+    26	DRWXR-XR-X@    6 ROOT  WHEEL      204 JUN 28  2014 PRIVATE/\
+    27	DRWXR-XR-X@   62 ROOT  WHEEL     2108 JUN 28  2014 SBIN/\
+    28	LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 TMP@ -> PRIVATE/TMP\
+    29	DRWXR-XR-X@   12 ROOT  WHEEL      408 SEP  3  2014 USR/\
+    30	LRWXR-XR-X@    1 ROOT  WHEEL       11 JUN 28  2014 VAR@ -> PRIVATE/VAR\
+process 46592 exits with 0\
+\
+16\
+===\
+$ cat moby.txt |tr A-Z a-z|tr -C a-z '\\n' |sed  '/^$/d' |sort|uniq -c|sort -nr|sed 10q\
+process 46597 exits with 0\
+sights to\
+be seen in this famous town.  Soon I proposed a social smoke; and,\
+producing his pouch and tomahawk, he quietly offered me a puff.  And\
+then we sat exchanging puffs from that wild pipe of his, and keeping\
+it regularly passing between us.\
+\
+If there yet lurked any ice of indifference towards me in the Pagan's\
+breast, this pleasant, genial smoke we had, soon thawed it out, and\
+left us cronies.  He seemed to take to me quite as naturally and\
+unbiddenly as I to him; and when our smoke was over, he pressed his\
+process 46603 exits with 0\
+process 46602 exits with 0\
+process 46600 exits with 0\
+process 46604 exits with 0\
+process 46598 exits with 0\
+process 46599 exits with 0\
+process 46601 exits with 0\
+\
+17\
+===\
+$ cd /etc\
+$ pwd\
+/private/etc\
+process 46607 exits with 0\
+\
+18\
+===\
+$ pwd\
+/Users/alex\
+process 46609 exits with 0\
+\
+19\
+===\
+$ cd /etc /home\
+ERROR: too many arguments\
+\
+20\
+===\
+$ exit\
+\
+alex at nbp-162-105 in ~/school_proj/os/basic_shell_imprv on poop [?]\
+$ echo $?\
+0\
+\
+21\
+===\
+$ exit 123\
+\
+alex at nbp-162-105 in ~/school_proj/os/basic_shell_imprv on poop [?]\
+$ echo $?\
+123\
+\
+22\
+===\
+$ (typeset -i i;i=0;while [ $i -lt 10 ];do echo echo $i;i=i+1;done)|./shell\
+0\
+process 46732 exits with 0\
+\
+23\
+===\
+$ (typeset -i i;i=0;while [ $i -lt 1000 ];do echo echo $i;i=i+1;done)|./shell\
+0\
+process 46759 exits with 0}
