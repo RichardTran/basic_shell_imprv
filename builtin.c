@@ -11,6 +11,8 @@
  * wrappers for the exit and chdir function
  */
 int call_exit(char * status){
+	if(status == NULL)
+		exit(0);
 	exit(atoi(status));
 	return 0;
 }//end of call_exit
