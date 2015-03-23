@@ -20,10 +20,8 @@ int call_exit(char * status){
  * goes to HOME
  */
 int call_cd(char * path){
-	printf("LINE: %d\n",__LINE__);
 	char * path_dup;
 	if(path == NULL){
-		printf("LINE: %d\n",__LINE__);
 		path_dup = strdup(getenv("HOME"));
 	}
 	else{
