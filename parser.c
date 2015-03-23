@@ -26,10 +26,10 @@ void transfer(int pfd[], int pfd2[], char*cmd2[]){
 	int pid;
 	switch(pid = fork()){
 	case 0:
-		dup2(pfd[0],0);
 		close(pfd[1]);
-		dup2(pfd2[1],1);
 		close(pfd2[0]);
+		dup2(pfd[0],0);
+		dup2(pfd2[1],1);
 		execvp(cmd2[0],cmd2);
 		perror(cmd2[0]);
 	default:
@@ -159,7 +159,7 @@ void piping(cmdList *head){
 				transfer(fd, fd2, cmd1->argv);
 			}
 			else{
-				transfer(fd, fd2, cmd1->argv);
+				transfer(fd2, fd, cmd1->argv);
 			}
 		}
 		cmd1 = cmd1->next;
@@ -208,9 +208,9 @@ cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
 	which is the number of arguments, including the cmd itself. 
 	
 	The buffer stores the first character that isn't a quote. If it is a quote, and no previous character
-	address was stored, it'll store the next character. If reaching a blank or tab character and not within
-	quotes, the function will turn it into a \0 character and turn the ptrflag off, signaling that the buffer
-	will accept the address of the next character.
+	address was stored, it'll store the next character. Otherwise, store the address of the current character.
+	If reaching a blank or tab character and not within quotes, the function will turn it 
+	into a \0 character and turn the ptrflag off, signaling that the buffer	will accept the address of the next character.
 
 	quoteFlag has 3 values: 0, 1 ,2.
 		0: No quote found yet
@@ -219,7 +219,7 @@ cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
 	This flag allows us to check the character to see if it corresponds to the quoteFlag first recorded, in which
 	if a matching quote is found later, it'll replace it with \0.
 
-	Given the option, we chose to split a string such as there're as two arguments: "there" "re" due to the nature
+	Given the option, we chose to split a string such as "there're" as two arguments: "there" "re" due to the nature
 	of our implentation. It is impossible to merge the two together without string copying to somewhere else.
 
 	Only time we malloc is to create the structure to hold the buffer of char ptrs. 
