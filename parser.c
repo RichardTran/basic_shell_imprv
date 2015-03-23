@@ -11,8 +11,8 @@ void runsrc2(int pfd[], int pfd2[],char* cmd1[]){
 	case 0:
 		dup2(pfd[1],1); // replace stdout with pfd[1]. can be read by pfd[0] due to piping
 		close(pfd[0]);
-//		close(pfd2[0]);
-//		close(pfd2[1]);
+		close(pfd2[0]);
+		close(pfd2[1]);
 		execvp(cmd1[0], cmd1); // writes into stdout. into pfd[1];
 		perror(cmd1[0]);
 	default:
@@ -34,7 +34,7 @@ void transfer(int pfd[], int pfd2[], char*cmd2[]){
 		perror(cmd2[0]);
 	default:
 //		wait(NULL);
-		break;
+		return;
 	
 	case -1:
 		perror("fork");
@@ -49,10 +49,11 @@ void rundest2(int pfd[], int pfd2[], char* cmd2[]){
 	case 0: // child process
 		close(pfd[0]);
 		dup2(pfd2[0],0); // pfd[0] becomes stdin // becomes the input for 2nd program
-		close(pfd[1]);
 		close(pfd2[1]);// the magic key
+		close(pfd[1]);
 		execvp(cmd2[0],cmd2);//reads whatever is in pfd[0]
 		perror(cmd2[0]);
+		exit(0);
 	default:
 		break;
 	case -1:
@@ -108,21 +109,16 @@ void piping(cmdList *head){
 	int cmdCount = numOfCmds(head);
 	int fd[2];
 	int fd2[2];
-//	int fd3[2];
 	cmdList* cmd1 = head;
-//	cmdList* cmd2 = head->next;
 	pipe(fd); // produces two unique file descriptors. 
 		  // whatever is written in fd[1] can be read in fd[0]
 	pipe(fd2);
-//	pipe(fd3);
 	if(cmdCount == 1){
 		switch(pid = fork()){
 		case 0:
 			execvp(cmd1->argv[0],cmd1->argv);
 			exit(0);
 		default:
-	//		while((pid = wait(&status)) != -1){
-	//		}
 			pid = wait(&status);
 			fprintf(stderr,"process %d exits with %d\n", pid, WEXITSTATUS(status));
 			return;
@@ -144,7 +140,31 @@ void piping(cmdList *head){
 		runsrc2(fd,fd2,cmd1->argv);
 		transfer(fd, fd2, cmd1->next->argv);
 		rundest2(fd,fd2,cmd1->next->next->argv);
-		close(fd[0]);// close(fd2[1]); close(fd[1]); close(fd2[1]);
+		close(fd[0]);
+		close(fd2[0]);
+		close(fd[1]);
+		close(fd2[1]);
+		while ((pid = wait(&status)) != -1){	/* pick up all the dead children */
+			fprintf(stderr, "process %d exits with %d\n", pid, WEXITSTATUS(status));
+		}
+		return;
+	}
+	// more than 3
+	else if(cmdCount > 3){
+		int i;
+		runsrc2(fd,fd2,cmd1->argv); //guarenteed to work
+		for(i = 0; i<(cmdCount-2);i++){
+			cmd1 = cmd1->next;
+			if(i%2==0){
+				transfer(fd, fd2, cmd1->argv);
+			}
+			else{
+				transfer(fd, fd2, cmd1->argv);
+			}
+		}
+		cmd1 = cmd1->next;
+		rundest2(fd,fd2,cmd1->argv); // guarenteed to work
+		close(fd[0]);
 		close(fd2[0]);
 		close(fd[1]);
 		close(fd2[1]);
@@ -158,6 +178,11 @@ void piping(cmdList *head){
 	}
 }
 
+/*
+	Inserts a buffer into the set of commands. Keep count as a way to
+	save the amount of arguments per command. Parsecmds uses CmdListTail
+	so that this method will add the new buffer of cmd+arguments in O(1) rather than O(n^2) time.
+*/
 cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
 	char c;
 	int i;
@@ -177,13 +202,34 @@ cmdList* insertCmd(char* arguments[],int count, cmdList* cmdTail){
 	ptr->argv[count] = NULL;
 	return ptr;
 }
+/*
+	Does all the string parsing, and adds every argument to the buffer.
+	The buffer is then loaded into a cmdList linked list structure to store the size of buffer,
+	which is the number of arguments, including the cmd itself. 
+	
+	The buffer stores the first character that isn't a quote. If it is a quote, and no previous character
+	address was stored, it'll store the next character. If reaching a blank or tab character and not within
+	quotes, the function will turn it into a \0 character and turn the ptrflag off, signaling that the buffer
+	will accept the address of the next character.
 
+	quoteFlag has 3 values: 0, 1 ,2.
+		0: No quote found yet
+		1: A single quote found
+		2: A double quote found
+	This flag allows us to check the character to see if it corresponds to the quoteFlag first recorded, in which
+	if a matching quote is found later, it'll replace it with \0.
+
+	Given the option, we chose to split a string such as there're as two arguments: "there" "re" due to the nature
+	of our implentation. It is impossible to merge the two together without string copying to somewhere else.
+
+	Only time we malloc is to create the structure to hold the buffer of char ptrs. 
+*/
 cmdList* parseCmds(char* input){
 	int i = 0;
 	int ptrFlag = 0;
 	int quoteFlag = 0;
 	int bufferIndex = 0;
-	char c = (char)*input;	// c = input[0];
+	char c = (char)*input;
 	char* buffer[51];
 	cmdList* cmdListHead = NULL;
 	cmdList* cmdListTail = NULL;
@@ -272,12 +318,24 @@ int main(int argc, char** argv){
 	cmdList* list;
 	cmdList* DEBUG_PTR;
 	int exitStatus;
-	while(1==1){
-		if(showprompt){
+	if(showprompt){
+		while(1==1){
 			printf("$ ");
 			if(exitStatus=fgets(cmdLineInput,MAX,stdin)==0){
 				exit(0);
 			}
+			list = parseCmds(cmdLineInput);
+			if(list!=NULL&&is_builtin(list) == 0){
+				builtin(list);
+			}
+			else if(list!=NULL){
+				piping(list);
+			}
+		}
+	}
+	else{
+		if(exitStatus=fgets(cmdLineInput,MAX,stdin)==0){
+			exit(0);
 		}
 		list = parseCmds(cmdLineInput);
 		if(list!=NULL&&is_builtin(list) == 0){

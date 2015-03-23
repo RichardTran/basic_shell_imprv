@@ -2,7 +2,7 @@ COMPILER = gcc
 CCFLAGS = -ansi -pedantic -Wall
 
 parser: parser.o builtin.o cmd.h builtin.h
-	$(COMPILER) parser.o builtin.o -o main
+	$(COMPILER) parser.o builtin.o -o shell
 
 parser.o: parser.c cmd.h builtin.h
 	$(COMPILER) -c parser.c
@@ -23,4 +23,4 @@ clean:
 	rm -f merp.o
 	rm -f builtin.o
 	rm -f parser.o
-	rm -f main
+	rm -f shell
