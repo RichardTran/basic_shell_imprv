@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
+//richard tran & alexandra zhang
+
 /**
  * wrappers for the exit and chdir function
  */

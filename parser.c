@@ -2,6 +2,7 @@
 #include "builtin.h"
 #define MAX 512
 
+// richard tran & alexandra zhang
 
 // usually the first cmd since it requires no input. 
 void runsrc2(int pfd[], int pfd2[],char* cmd1[]){
