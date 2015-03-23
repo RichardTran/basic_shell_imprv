@@ -325,7 +325,10 @@ int main(int argc, char** argv){
 				exit(0);
 			}
 			list = parseCmds(cmdLineInput);
-			if(list!=NULL&&is_builtin(list) == 0){
+			if(list->argc > 2){
+				printf("ERROR: too many arguments \n");
+			}
+			else if(list!=NULL&&is_builtin(list) == 0){
 				builtin(list);
 			}
 			else if(list!=NULL){
