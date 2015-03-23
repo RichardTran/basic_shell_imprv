@@ -15,7 +15,7 @@ struct builtin{
 
 int is_builtin(cmdList *c);
 void builtin(cmdList *c);
-int call_exit(int status);
+int call_exit(char *  status);
 int call_cd(char * path);
 
 #endif
